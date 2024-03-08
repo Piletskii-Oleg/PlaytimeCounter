@@ -8,13 +8,16 @@ typedef std::map<std::string, long long> TimeMap;
 class TimeCounter {
 private:
     static GJGameLevel* currentLevel;
+    static std::string levelId;
+    static std::string sessionId;
+    static long long getStartTime();
+    static long long getTotalTime();
+    static void setLevelId(GJGameLevel* level);
+    static void setStartTime();
 public:
     TimeCounter() = delete;
-    static std::string getLevelId(GJGameLevel* level);
-    static long long getStartTime(const std::string& levelId);
-    static void setStartTime(const std::string& levelId);
-    static long long getTotalTime(const std::string& levelId);
-    static void updateTotalTime(const std::string& levelId);
+    static void setLevel(GJGameLevel* level);
+    static void updateTotalTime();
 };
 
 #endif //PLAYTIMECOUNTER_TIMECOUNTER_HPP

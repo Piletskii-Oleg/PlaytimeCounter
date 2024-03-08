@@ -1,43 +1,43 @@
 #include "TimeCounter.hpp"
 #include "utils/TimeUtils.hpp"
 
-std::string TimeCounter::getLevelId(GJGameLevel *level) {
-    if (level == nullptr) {
-        return "";
-    }
+GJGameLevel* currentLevel = nullptr;
 
-    auto levelId = std::to_string(level->m_levelID.value());
+void TimeCounter::setLevelId(GJGameLevel *level) {
+    levelId = std::to_string(level->m_levelID.value());
 
     if (level->m_dailyID > 0) {
         levelId += "-daily";
     }
-
-    return levelId;
 }
 
-void TimeCounter::setStartTime(const std::string& levelId) {
-    auto sessionId = levelId + "sessionId";
+void TimeCounter::setStartTime() {
     auto currentTime = getCurrentTimeSeconds();
     Mod::get()->setSavedValue(sessionId, currentTime);
 }
 
-void TimeCounter::updateTotalTime(const std::string& levelId) {
-    auto sessionId = levelId + "session";
-
+void TimeCounter::updateTotalTime() {
     auto currentTime = getCurrentTimeSeconds();
-    auto startTime = TimeCounter::getStartTime(levelId);
+    auto startTime = TimeCounter::getStartTime();
     auto delta = currentTime - startTime;
 
-    auto oldTime = TimeCounter::getTotalTime(levelId);
+    auto oldTime = TimeCounter::getTotalTime();
     auto newTime = oldTime + delta;
     Mod::get()->setSavedValue(levelId, newTime);
 }
 
-long long TimeCounter::getStartTime(const std::string &levelId) {
-    auto sessionId = levelId + "session";
+long long TimeCounter::getStartTime() {
     return Mod::get()->getSavedValue<long long>(sessionId);
 }
 
-long long TimeCounter::getTotalTime(const std::string &levelId) {
+long long TimeCounter::getTotalTime() {
     return Mod::get()->getSavedValue<long long>(levelId);
+}
+
+void TimeCounter::setLevel(GJGameLevel *level) {
+    currentLevel = level;
+    TimeCounter::setLevelId(level);
+    sessionId = levelId + "session";
+
+    setStartTime();
 }

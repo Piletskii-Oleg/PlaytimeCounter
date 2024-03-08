@@ -9,16 +9,13 @@ class $modify(PlayLayer) {
             return false;
         }
 
-        auto levelId = TimeCounter::getLevelId(level);
-        TimeCounter::setStartTime(levelId);
+        TimeCounter::setLevel(level);
 
         return true;
     }
 
     void onQuit() {
         PlayLayer::onQuit();
-
-        auto levelId = TimeCounter::getLevelId(this->m_level);
-        TimeCounter::updateTotalTime(levelId);
+        TimeCounter::updateTotalTime();
     }
 };
