@@ -7,7 +7,7 @@ typedef std::map<std::string, long long> TimeMap;
 
 class TimeCounter {
 private:
-    static TimeMap levels;
+    static GJGameLevel* currentLevel;
 public:
     TimeCounter() = delete;
     static std::string getLevelId(GJGameLevel* level);

@@ -1,8 +1,6 @@
 #include "TimeCounter.hpp"
 #include "utils/TimeUtils.hpp"
 
-TimeMap TimeCounter::levels {};
-
 std::string TimeCounter::getLevelId(GJGameLevel *level) {
     if (level == nullptr) {
         return "";

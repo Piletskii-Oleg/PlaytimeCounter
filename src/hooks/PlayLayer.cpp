@@ -10,7 +10,15 @@ class $modify(PlayLayer) {
         }
 
         auto levelId = TimeCounter::getLevelId(level);
+        TimeCounter::setStartTime(levelId);
 
         return true;
+    }
+
+    void onQuit() {
+        PlayLayer::onQuit();
+
+        auto levelId = TimeCounter::getLevelId(this->m_level);
+        TimeCounter::updateTotalTime(levelId);
     }
 };
