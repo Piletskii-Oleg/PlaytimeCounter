@@ -9,7 +9,13 @@ project(PlaytimeCounter VERSION 1.0.0)
 # Set up the mod binary
 add_library(${PROJECT_NAME} SHARED
     src/main.cpp
-    # Add your cpp files here
+        src/TimeCounter.cpp
+        src/TimeCounter.hpp
+        src/hooks/FLAlertLayer.cpp
+        src/hooks/PlayLayer.cpp
+        src/utils/TimeUtils.cpp
+        src/utils/TimeUtils.hpp
+        # Add your cpp files here
 )
 
 if (NOT DEFINED ENV{GEODE_SDK})
