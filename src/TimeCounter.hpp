@@ -11,13 +11,13 @@ private:
     static std::string levelId;
     static std::string sessionId;
     static long long getStartTime();
-    static long long getTotalTime();
     static void setLevelId(GJGameLevel* level);
     static void setStartTime();
 public:
     TimeCounter() = delete;
     static void setLevel(GJGameLevel* level);
     static void updateTotalTime();
+    static long long getTotalTime();
 };
 
 #endif //PLAYTIMECOUNTER_TIMECOUNTER_HPP
