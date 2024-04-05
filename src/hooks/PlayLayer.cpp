@@ -14,8 +14,17 @@ class $modify(PlayLayer) {
         return true;
     }
 
+
+
     void onQuit() {
         PlayLayer::onQuit();
         TimeCounter::updateTotalTime();
+
+        // log::info("{} attemptTime: {}", this->m_level->m_levelName, this->m_level->m_attemptTime.value());
+        // log::info("{} workingTime: {}", this->m_level->m_levelName, this->m_level->m_workingTime);
+        // log::info("{} workingTime2: {}", this->m_level->m_levelName, this->m_level->m_workingTime2);
+        // logging
+        auto time = TimeCounter::getTotalTime();
+        log::info("{}: {}", this->m_level->m_levelName, time);
     }
 };
