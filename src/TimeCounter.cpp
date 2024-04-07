@@ -14,133 +14,54 @@ void TimeCounter::setLevelId(GJGameLevel *level) {
     }
 }
 
-
-
-void TimeCounter::setStartTime() {
+void TimeCounter::setStartTime(CounterType type) {
     auto currentTime = getCurrentTimeSeconds();
-    Mod::get()->setSavedValue(TimeCounter::sessionId, currentTime);
+
+    auto id = appendType(type, TimeCounter::sessionId);
+    Mod::get()->setSavedValue(id, currentTime);
 }
 
-void TimeCounter::setStartTimeNormal() {
+void TimeCounter::updateTotalTime(CounterType type) {
     auto currentTime = getCurrentTimeSeconds();
-    Mod::get()->setSavedValue(TimeCounter::sessionId + "Normal", currentTime);
-}
-
-void TimeCounter::setStartTimePractice() {
-    auto currentTime = getCurrentTimeSeconds();
-    Mod::get()->setSavedValue(TimeCounter::sessionId + "Practice", currentTime);
-}
-
-void TimeCounter::setStartTimeStartpos() {
-    auto currentTime = getCurrentTimeSeconds();
-    Mod::get()->setSavedValue(TimeCounter::sessionId + "Startpos", currentTime);
-}
-
-void TimeCounter::setStartTimeNoPause() {
-    auto currentTime = getCurrentTimeSeconds();
-    Mod::get()->setSavedValue(TimeCounter::sessionId + "NoPause", currentTime);
-}
-
-
-
-void TimeCounter::updateTotalTime() {
-    auto currentTime = getCurrentTimeSeconds();
-    auto startTime = TimeCounter::getStartTime();
+    auto startTime = TimeCounter::getStartTime(type);
     auto delta = currentTime - startTime;
 
-    auto oldTime = TimeCounter::getTotalTime();
+    auto oldTime = TimeCounter::getTotalTime(type);
     auto newTime = oldTime + delta;
-    Mod::get()->setSavedValue(TimeCounter::levelId, newTime);
+
+    auto id = appendType(type, TimeCounter::levelId);
+    Mod::get()->setSavedValue(id, newTime);
 }
 
-void TimeCounter::updateTotalTimeNormal() {
-    auto currentTime = getCurrentTimeSeconds();
-    auto startTime = TimeCounter::getStartTimeNormal();
-    auto delta = currentTime - startTime;
-
-    auto oldTime = TimeCounter::getTotalTimeNormal();
-    auto newTime = oldTime + delta;
-    Mod::get()->setSavedValue(TimeCounter::levelId + "Normal", newTime);
+long long TimeCounter::getStartTime(CounterType type) {
+    auto id = appendType(type, TimeCounter::sessionId);
+    return Mod::get()->getSavedValue<long long>(id);
 }
 
-void TimeCounter::updateTotalTimePractice() {
-    auto currentTime = getCurrentTimeSeconds();
-    auto startTime = TimeCounter::getStartTimePractice();
-    auto delta = currentTime - startTime;
-
-    auto oldTime = TimeCounter::getTotalTimePractice();
-    auto newTime = oldTime + delta;
-    Mod::get()->setSavedValue(TimeCounter::levelId + "Practice", newTime);
+long long TimeCounter::getTotalTime(CounterType type) {
+    auto id = appendType(type, TimeCounter::levelId);
+    return Mod::get()->getSavedValue<long long>(id);
 }
-
-void TimeCounter::updateTotalTimeStartpos() {
-    auto currentTime = getCurrentTimeSeconds();
-    auto startTime = TimeCounter::getStartTimeStartpos();
-    auto delta = currentTime - startTime;
-
-    auto oldTime = TimeCounter::getTotalTimeStartpos();
-    auto newTime = oldTime + delta;
-    Mod::get()->setSavedValue(TimeCounter::levelId + "Startpos", newTime);
-}
-
-void TimeCounter::updateTotalTimeNoPause() {
-    auto currentTime = getCurrentTimeSeconds();
-    auto startTime = TimeCounter::getStartTimeNoPause();
-    auto delta = currentTime - startTime;
-
-    auto oldTime = TimeCounter::getTotalTimeNoPause();
-    auto newTime = oldTime + delta;
-    Mod::get()->setSavedValue(TimeCounter::levelId + "NoPause", newTime);
-}
-
-
-
-long long TimeCounter::getStartTime() {
-    return Mod::get()->getSavedValue<long long>(TimeCounter::sessionId);
-}
-
-long long TimeCounter::getStartTimeNormal() {
-    return Mod::get()->getSavedValue<long long>(TimeCounter::sessionId + "Normal");
-}
-
-long long TimeCounter::getStartTimePractice() {
-    return Mod::get()->getSavedValue<long long>(TimeCounter::sessionId + "Practice");
-}
-
-long long TimeCounter::getStartTimeStartpos() {
-    return Mod::get()->getSavedValue<long long>(TimeCounter::sessionId + "Startpos");
-}
-
-long long TimeCounter::getStartTimeNoPause() {
-    return Mod::get()->getSavedValue<long long>(TimeCounter::sessionId + "NoPause");
-}
-
-
-
-long long TimeCounter::getTotalTime() {
-    return Mod::get()->getSavedValue<long long>(TimeCounter::levelId);
-}
-
-long long TimeCounter::getTotalTimeNormal() {
-    return Mod::get()->getSavedValue<long long>(TimeCounter::levelId + "Normal");
-}
-
-long long TimeCounter::getTotalTimePractice() {
-    return Mod::get()->getSavedValue<long long>(TimeCounter::levelId + "Practice");
-}
-
-long long TimeCounter::getTotalTimeStartpos() {
-    return Mod::get()->getSavedValue<long long>(TimeCounter::levelId + "Startpos");
-}
-
-long long TimeCounter::getTotalTimeNoPause() {
-    return Mod::get()->getSavedValue<long long>(TimeCounter::levelId + "NoPause");
-}
-
-
 
 void TimeCounter::setLevel(GJGameLevel *level) {
     TimeCounter::currentLevel = level;
     TimeCounter::setLevelId(level);
     TimeCounter::sessionId = TimeCounter::levelId + "-session";
+}
+
+std::string TimeCounter::appendType(CounterType type, const std::string& id) {
+    switch (type) {
+        case CounterType::Normal:
+            return id + "Normal";
+        case CounterType::Practice:
+            return id + "Practice";
+        case CounterType::Startpos:
+            return id + "Startpos";
+        case CounterType::NoPause:
+            return id + "NoPause";
+        case CounterType::Total:
+            return id;
+    }
+
+    return id;
 }

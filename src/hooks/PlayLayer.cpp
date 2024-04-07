@@ -1,5 +1,5 @@
 #include <Geode/modify/PlayLayer.hpp>
-#include "../TimeCounter.hpp"
+#include "TimeCounter.hpp"
 
 using namespace geode::prelude;
 
@@ -10,8 +10,9 @@ class $modify(PlayLayer) {
         }
 
         TimeCounter::setLevel(level);
-        TimeCounter::setStartTime();
-        TimeCounter::setStartTimeNoPause();
+        TimeCounter::setStartTime(CounterType::Total);
+        TimeCounter::setStartTime(CounterType::NoPause);
+
         log::info("AttStart");
 
         return true;
@@ -26,28 +27,28 @@ class $modify(PlayLayer) {
         if (startpos) {
             if (!prevstartpos) {
                 log::info("startpos begin");
-                TimeCounter::setStartTimeStartpos();
+                TimeCounter::setStartTime(CounterType::Startpos);
                 Mod::get()->setSavedValue(TimeCounter::levelId + "isStartpos", true);
             }
         }
         else {
             if (prevstartpos) {
                 log::info("startpos end");
-                TimeCounter::updateTotalTimeStartpos();
+                TimeCounter::updateTotalTime(CounterType::Startpos);
                 Mod::get()->setSavedValue(TimeCounter::levelId + "isStartpos", false);
             }
         }
         if (!startpos && !practice) {
             if (!prevnormal) {
                 log::info("normal begin");
-                TimeCounter::setStartTimeNormal();
+                TimeCounter::setStartTime(CounterType::Normal);
                 Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", true);
             }
         }
         else {
             if (prevnormal) {
                 log::info("normal end");
-                TimeCounter::updateTotalTimeNormal();
+                TimeCounter::updateTotalTime(CounterType::Normal);
                 Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", false);
             }
         }
@@ -55,37 +56,36 @@ class $modify(PlayLayer) {
 
     void levelComplete() {
         PlayLayer::levelComplete();
-        TimeCounter::updateTotalTimeNoPause();
-        auto testmode = PlayLayer::get()->m_isTestMode;
+        TimeCounter::updateTotalTime(CounterType::NoPause);
     }
 
     void togglePracticeMode(bool p0) {
         PlayLayer::togglePracticeMode(p0);
         if (p0) {
-            TimeCounter::setStartTimePractice();
+            TimeCounter::setStartTime(CounterType::Practice);
             if (!PlayLayer::get()->m_isTestMode) {
-                TimeCounter::updateTotalTimeNormal();
+                TimeCounter::updateTotalTime(CounterType::Normal);
                 Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", false);
             }
         }
         else {
-            TimeCounter::updateTotalTimePractice();
+            TimeCounter::updateTotalTime(CounterType::Practice);
         }
     }
 
     void fullReset() {
         PlayLayer::fullReset();
-        TimeCounter::setStartTimeNoPause();
+        TimeCounter::setStartTime(CounterType::NoPause);
     }
 
     void onQuit() {
         bool practice = PlayLayer::get()->m_isPracticeMode;
         bool startpos = PlayLayer::get()->m_isTestMode;
-        if (practice) {TimeCounter::updateTotalTimePractice();}
-        if (startpos) {TimeCounter::updateTotalTimeStartpos();}
-        if (!practice && !startpos) {TimeCounter::updateTotalTimeNormal();}
+        if (practice) {TimeCounter::updateTotalTime(CounterType::Practice);}
+        if (startpos) {TimeCounter::updateTotalTime(CounterType::Startpos);}
+        if (!practice && !startpos) {TimeCounter::updateTotalTime(CounterType::Normal);}
         PlayLayer::onQuit();
-        TimeCounter::updateTotalTime();
+        TimeCounter::updateTotalTime(CounterType::Total);
         Mod::get()->setSavedValue(TimeCounter::levelId + "isStartpos", false);
         Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", false);
 
@@ -94,11 +94,11 @@ class $modify(PlayLayer) {
         // log::info("{} workingTime2: {}", this->m_level->m_levelName, this->m_level->m_workingTime2);
         // logging
         auto name = TimeCounter::levelName;
-        auto time = TimeCounter::getTotalTime();
-        auto timenormal = TimeCounter::getTotalTimeNormal();
-        auto timepractice = TimeCounter::getTotalTimePractice();
-        auto timestartpos = TimeCounter::getTotalTimeStartpos();
-        auto timenopause = TimeCounter::getTotalTimeNoPause();
+        auto time = TimeCounter::getTotalTime(CounterType::Total);
+        auto timenormal = TimeCounter::getTotalTime(CounterType::Normal);
+        auto timepractice = TimeCounter::getTotalTime(CounterType::Practice);
+        auto timestartpos = TimeCounter::getTotalTime(CounterType::Startpos);
+        auto timenopause = TimeCounter::getTotalTime(CounterType::NoPause);
         log::info("{}: {} with pauses", name, time);
         log::info("{}: {} normal", name, timenormal);
         log::info("{}: {} practice", name, timepractice);

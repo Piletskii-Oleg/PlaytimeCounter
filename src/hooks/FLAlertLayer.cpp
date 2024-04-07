@@ -6,8 +6,6 @@ class $modify(WithCounter, FLAlertLayer) {
             return false;
         }
 
-
-
         return true;
     }
 };
