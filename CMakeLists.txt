@@ -6,25 +6,16 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
 project(PlaytimeCounter VERSION 1.0.0)
 
-# Set up the mod binary
-add_library(${PROJECT_NAME} SHARED
-    src/main.cpp
-        src/TimeCounter.cpp
-        src/TimeCounter.hpp
-        src/hooks/FLAlertLayer.cpp
-        src/hooks/PlayLayer.cpp
-        src/utils/TimeUtils.cpp
-        src/utils/TimeUtils.hpp
-        # Add your cpp files here
-)
+file(GLOB_RECURSE SOURCES src/*.cpp)
+add_library(${PROJECT_NAME} SHARED ${SOURCES})
 
-if (NOT DEFINED ENV{GEODE_SDK})
+if(NOT DEFINED ENV{GEODE_SDK})
     message(FATAL_ERROR "Unable to find Geode SDK! Please define GEODE_SDK environment variable to point to Geode")
 else()
     message(STATUS "Found Geode: $ENV{GEODE_SDK}")
 endif()
 
+include_directories("${CMAKE_CURRENT_SOURCE_DIR}/src")
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
-# Set up dependencies, resources, link Geode
 setup_geode_mod(${PROJECT_NAME})
