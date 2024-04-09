@@ -49,5 +49,9 @@ class $modify(PauseLayer) {
 
         Mod::get()->setSavedValue(TimeCounter::levelId + "isStartpos", false);
         Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", false);
+        std::string mode = "";
+        Mod::get()->setSavedValue("FirstAtt", mode);
+        log::debug("PauseLayer_onEdit_withpauseallstop_isStartposisNormalfalse_FirstAttnone");
+        log::debug("PauseLayer_onEdit practice: {}, startpos: {}", practice, startpos);
     }
 };

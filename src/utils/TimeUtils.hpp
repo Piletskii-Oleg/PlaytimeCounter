@@ -6,5 +6,6 @@
 #define PLAYTIMECOUNTER_TIMEUTILS_HPP
 
 long long getCurrentTimeSeconds();
+std::string getCurrentDate();
 
 #endif //PLAYTIMECOUNTER_TIMEUTILS_HPP

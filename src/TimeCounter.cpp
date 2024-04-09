@@ -7,11 +7,19 @@ std::string TimeCounter::levelName;
 std::string TimeCounter::sessionId;
 
 void TimeCounter::setLevelId(GJGameLevel *level) {
-    TimeCounter::levelId = std::to_string(level->m_levelID.value());
+    if (level->m_levelID.value() > 0) {
+        TimeCounter::levelId = std::to_string(level->m_levelID.value());
+    } else if (level->m_originalLevel.value() > 0) {
+        TimeCounter::levelId = std::to_string(level->m_originalLevel.value()) + "-copy";
+    } else {
+        TimeCounter::levelId = std::string(level->m_levelName) + "-mylevel";
+    }
+
     TimeCounter::levelName = level->m_levelName;
     if (level->m_dailyID > 0) {
         TimeCounter::levelId = TimeCounter::levelId + "-daily";
     }
+
 }
 
 void TimeCounter::setStartTime(CounterType type) {
