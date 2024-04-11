@@ -7,37 +7,37 @@ class $modify(PauseLayer) {
     void customSetup() {  
         PauseLayer::customSetup();
         TimeCounter::updateTotalTime(CounterType::NoPause);
-        log::debug("PauseLayer_customSetup_nopausestop");
+        // log::debug("PauseLayer_customSetup_nopausestop");
     }
 
     void onResume(CCObject* sender) {
         PauseLayer::onResume(sender);
         TimeCounter::setStartTime(CounterType::NoPause);
-        log::debug("PauseLayer_onResume_nopausestart");
+        // log::debug("PauseLayer_onResume_nopausestart");
     }
 
     void onNormalMode(CCObject* sender) {
         PauseLayer::onNormalMode(sender);
         TimeCounter::setStartTime(CounterType::NoPause);
-        log::debug("PauseLayer_onNormalMode_nopausestart");
+        // log::debug("PauseLayer_onNormalMode_nopausestart");
     }
 
     void onPracticeMode(CCObject* sender) {
         PauseLayer::onPracticeMode(sender);
         TimeCounter::setStartTime(CounterType::NoPause);
-        log::debug("PauseLayer_onPracticeMode_nopausestart");
+        // log::debug("PauseLayer_onPracticeMode_nopausestart");
     }
 
     void onRestart(CCObject* sender) {
         PauseLayer::onRestart(sender);
         TimeCounter::setStartTime(CounterType::NoPause);
-        log::debug("PauseLayer_onRestart_nopausestart");
+        // log::debug("PauseLayer_onRestart_nopausestart");
     }
 
     void onRestartFull(CCObject* sender) {
         PauseLayer::onRestartFull(sender);
         TimeCounter::setStartTime(CounterType::NoPause);
-        log::debug("PauseLayer_onRestartFull_nopausestart");
+        // log::debug("PauseLayer_onRestartFull_nopausestart");
     }
 
     void onEdit(CCObject* sender) {
@@ -52,7 +52,7 @@ class $modify(PauseLayer) {
         Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", false);
         std::string mode = "";
         Mod::get()->setSavedValue("FirstAtt", mode);
-        log::debug("PauseLayer_onEdit_withpauseallstop_isStartposisNormalfalse_FirstAttnone");
-        log::debug("PauseLayer_onEdit practice: {}, startpos: {}", practice, startpos);
+        // log::debug("PauseLayer_onEdit_withpauseallstop_isStartposisNormalfalse_FirstAttnone");
+        // log::debug("PauseLayer_onEdit practice: {}, startpos: {}", practice, startpos);
     }
 };
