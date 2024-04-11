@@ -20,7 +20,7 @@ class $modify(PlayLayer) {
 
     void resetLevel() {
         PlayLayer::resetLevel();
-        log::debug("PlayLayer_resetLevel levelId:{}", TimeCounter::levelId);
+        // log::debug("PlayLayer_resetLevel levelId:{}", TimeCounter::levelId);
         bool startpos = PlayLayer::get()->m_isTestMode;
         bool practice = PlayLayer::get()->m_isPracticeMode;
         bool prevstartpos = Mod::get()->getSavedValue<bool>(TimeCounter::levelId + "isStartpos");
@@ -53,9 +53,9 @@ class $modify(PlayLayer) {
                 Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", false);
             }
         } else {
-            log::debug("PlayLayer_resetLevel SKIP");
+            // log::debug("PlayLayer_resetLevel SKIP");
             std::string mode = "";
-            log::debug("PlayLayer_resetLevel startpos:{}, practice:{}", startpos, practice);
+            // log::debug("PlayLayer_resetLevel startpos:{}, practice:{}", startpos, practice);
             if (startpos) {mode = "startpos";} else if (!practice) {mode = "normal";}
             if (practice) {mode = "practice";} 
             Mod::get()->setSavedValue("FirstAtt", mode);
@@ -75,7 +75,7 @@ class $modify(PlayLayer) {
             if (!PlayLayer::get()->m_isTestMode) {
                 TimeCounter::updateTotalTime(CounterType::Normal);
                 Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", false);
-                log::debug("PlayLayer_togglePracticeMode_normalstop_isNormalfalse");
+                // log::debug("PlayLayer_togglePracticeMode_normalstop_isNormalfalse");
             }
         }
         else {
@@ -100,8 +100,9 @@ class $modify(PlayLayer) {
         Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", false);
         std::string mode = "";
         Mod::get()->setSavedValue("FirstAtt", mode);
-        log::debug("PlayLayer_onQuit_withpauseallstop_isStartposisNormalfalse_FirstAttnone");
-        log::debug("PlayLayer_onQuit practice:{}, startpos:{}", practice, startpos);
+        // log::debug("PlayLayer_onQuit_withpauseallstop_isStartposisNormalfalse_FirstAttnone");
+        // log::debug("PlayLayer_onQuit practice:{}, startpos:{}", practice, startpos);
+
         // log::info("{} attemptTime: {}", this->m_level->m_levelName, this->m_level->m_attemptTime.value());
         // log::info("{} workingTime: {}", this->m_level->m_levelName, this->m_level->m_workingTime);
         // log::info("{} workingTime2: {}", this->m_level->m_levelName, this->m_level->m_workingTime2);
