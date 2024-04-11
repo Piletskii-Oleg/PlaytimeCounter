@@ -7,11 +7,19 @@ std::string TimeCounter::levelName;
 std::string TimeCounter::sessionId;
 
 void TimeCounter::setLevelId(GJGameLevel *level) {
-    TimeCounter::levelId = std::to_string(level->m_levelID.value());
+    if (level->m_levelID.value() > 0) {
+        TimeCounter::levelId = std::to_string(level->m_levelID.value());
+    } else if (level->m_originalLevel.value() > 0) {
+        TimeCounter::levelId = std::to_string(level->m_originalLevel.value()) + "-copy";
+    } else {
+        TimeCounter::levelId = std::string(level->m_levelName) + "-mylevel";
+    }
+
     TimeCounter::levelName = level->m_levelName;
     if (level->m_dailyID > 0) {
         TimeCounter::levelId = TimeCounter::levelId + "-daily";
     }
+
 }
 
 void TimeCounter::setStartTime(CounterType type) {
@@ -64,4 +72,27 @@ std::string TimeCounter::appendType(CounterType type, const std::string& id) {
     }
 
     return id;
+}
+
+
+void TimeCounter::updateDays() {
+    auto today = getCurrentDate();
+    int days = Mod::get()->getSavedValue<int>(TimeCounter::levelId + "DaysCounter");
+    if (days > 0) {
+        if (Mod::get()->getSavedValue<std::string>(TimeCounter::levelId + "LastDay") != today) {
+            Mod::get()->setSavedValue(TimeCounter::levelId + "DaysCounter", days + 1);
+            Mod::get()->setSavedValue(TimeCounter::levelId + "LastDay", today);
+        }
+    } else {
+        Mod::get()->setSavedValue(TimeCounter::levelId + "DaysCounter", 1);
+        Mod::get()->setSavedValue(TimeCounter::levelId + "LastDay", today);
+    }
+}
+
+int TimeCounter::getTotalDays() {
+    return Mod::get()->getSavedValue<int>(TimeCounter::levelId + "DaysCounter");
+}
+
+std::string TimeCounter::getLastDay() {
+    return Mod::get()->getSavedValue<std::string>(TimeCounter::levelId + "LastDay");
 }

@@ -26,6 +26,9 @@ public:
     static long long getStartTime(CounterType type);
     static void updateTotalTime(CounterType type);
     static long long getTotalTime(CounterType type);
+    static void updateDays();
+    static int getTotalDays();
+    static std::string getLastDay();
 };
 
 #endif //PLAYTIMECOUNTER_TIMECOUNTER_HPP

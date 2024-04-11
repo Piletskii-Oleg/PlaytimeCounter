@@ -4,6 +4,6 @@
 	"version": "v1.0.0",
 	"id": "tooz.playtime_counter",
 	"name": "Playtime Counter",
-	"developer": "Tooz",
+	"developer": "Tooz & Ranly",
 	"description": "Calculates total playtime on each level"
 }
