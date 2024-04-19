@@ -23,19 +23,19 @@ void TimeCounter::setLevelId(GJGameLevel *level) {
 }
 
 void TimeCounter::setStartTime(CounterType type) {
-    auto currentTime = getCurrentTimeSeconds();
+    long long currentTime = getCurrentTimeSeconds();
 
     auto id = appendType(type, TimeCounter::sessionId);
     Mod::get()->setSavedValue(id, currentTime);
 }
 
 void TimeCounter::updateTotalTime(CounterType type) {
-    auto currentTime = getCurrentTimeSeconds();
-    auto startTime = TimeCounter::getStartTime(type);
-    auto delta = currentTime - startTime;
+    long long currentTime = getCurrentTimeSeconds();
+    long long startTime = TimeCounter::getStartTime(type);
+    long long delta = currentTime - startTime;
 
-    auto oldTime = TimeCounter::getTotalTime(type);
-    auto newTime = oldTime + delta;
+    long long oldTime = TimeCounter::getTotalTime(type);
+    long long newTime = oldTime + delta;
 
     auto id = appendType(type, TimeCounter::levelId);
     Mod::get()->setSavedValue(id, newTime);
@@ -43,12 +43,32 @@ void TimeCounter::updateTotalTime(CounterType type) {
 
 long long TimeCounter::getStartTime(CounterType type) {
     auto id = appendType(type, TimeCounter::sessionId);
+    if (type == CounterType::Total) {
+        return Mod::get()->getSavedValue<long long>(id) - 1;
+    }
     return Mod::get()->getSavedValue<long long>(id);
 }
 
 long long TimeCounter::getTotalTime(CounterType type) {
     auto id = appendType(type, TimeCounter::levelId);
     return Mod::get()->getSavedValue<long long>(id);
+}
+
+void TimeCounter::recoverLostTime(CounterType type) {
+    auto savedLevel = Mod::get()->getSavedValue<std::string>("SavedLevel");
+    auto savedLevelId = appendType(type, savedLevel);
+    auto savedSession = savedLevel + "-session";
+    auto savedSessionId = appendType(type, savedSession);
+
+    long long savedTime = Mod::get()->getSavedValue<long long>("SavedTime");
+    long long startTime = Mod::get()->getSavedValue<long long>(savedSessionId);
+    if (type == CounterType::Total) {startTime = startTime - 1;}
+    long long delta = savedTime - startTime;
+
+    long long oldTime = Mod::get()->getSavedValue<long long>(savedLevelId);
+    long long newTime = oldTime + delta;
+
+    Mod::get()->setSavedValue(savedLevelId, newTime);
 }
 
 void TimeCounter::setLevel(GJGameLevel *level) {
