@@ -8,7 +8,7 @@ std::string formatTime(long long time) {
     auto time_h = time / 3600;
     auto time_min = (time - time_h*3600) / 60;
     auto time_sec = (time - time_h*3600 - time_min*60);
-    return std::format("{}:{}:{}", time_h, time_min, time_sec);
+    return std::format("{:02}:{:02}:{:02}", time_h, time_min, time_sec);
 }
 
 class $modify(PlayLayer) {
