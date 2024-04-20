@@ -7,12 +7,13 @@ using namespace geode::prelude;
 class $modify(PauseLayer) {
     void customSetup() {  
         PauseLayer::customSetup();
-        TimeCounter::updateTotalTime(CounterType::NoPause);
-
-        Mod::get()->setSavedValue("SavedTime", getCurrentTimeSeconds());
-        Mod::get()->setSavedValue("SavedOnPause", true);
-        Mod::get()->setSavedValue("SavedPractice", PlayLayer::get()->m_isPracticeMode);
-        // log::debug("PauseLayer_customSetup_nopausestop_recoverysaved");
+        if (Mod::get()->getSavedValue<std::string>("CurrentLevel") != "") {
+            TimeCounter::updateTotalTime(CounterType::NoPause);
+            Mod::get()->setSavedValue("SavedTime", getCurrentTimeSeconds());
+            Mod::get()->setSavedValue("SavedOnPause", true);
+            Mod::get()->setSavedValue("SavedPractice", PlayLayer::get()->m_isPracticeMode);
+            // log::debug("PauseLayer_customSetup_nopausestop_recoverysaved");
+        }
     }
 
     void onResume(CCObject* sender) {
@@ -47,17 +48,19 @@ class $modify(PauseLayer) {
 
     void onEdit(CCObject* sender) {
         PauseLayer::onEdit(sender);
-        bool practice = PlayLayer::get()->m_isPracticeMode;
-        bool startpos = PlayLayer::get()->m_isTestMode;
-        if (practice) {TimeCounter::updateTotalTime(CounterType::Practice);}
-        if (startpos) {TimeCounter::updateTotalTime(CounterType::Startpos);}
-        if (!practice && !startpos) {TimeCounter::updateTotalTime(CounterType::Normal);}
-        TimeCounter::updateTotalTime(CounterType::Total);
+        if (Mod::get()->getSavedValue<std::string>("CurrentLevel") != "") {
+            TimeCounter::updateTotalTime(CounterType::Total);
+            bool practice = PlayLayer::get()->m_isPracticeMode;
+            bool startpos = PlayLayer::get()->m_isTestMode;
+            if (practice) {TimeCounter::updateTotalTime(CounterType::Practice);}
+            if (startpos) {TimeCounter::updateTotalTime(CounterType::Startpos);}
+            if (!practice && !startpos) {TimeCounter::updateTotalTime(CounterType::Normal);}
+        }
+        std::string empty = "";
+        Mod::get()->setSavedValue("CurrentLevel", empty);
+        Mod::get()->setSavedValue("FirstAtt", empty);
         Mod::get()->setSavedValue("isStartpos", false);
         Mod::get()->setSavedValue("isNormal", false);
-        std::string empty = "";
-        Mod::get()->setSavedValue("FirstAtt", empty);
-        Mod::get()->setSavedValue("SavedLevel", empty);
         // log::debug("PauseLayer_onEdit_withpauseallstop_isStartposisNormalfalse_FirstAttnone");
         // log::debug("PauseLayer_onEdit practice: {}, startpos: {}", practice, startpos);
 

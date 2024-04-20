@@ -55,7 +55,7 @@ long long TimeCounter::getTotalTime(CounterType type) {
 }
 
 void TimeCounter::recoverLostTime(CounterType type) {
-    auto savedLevel = Mod::get()->getSavedValue<std::string>("SavedLevel");
+    auto savedLevel = Mod::get()->getSavedValue<std::string>("CurrentLevel");
     auto savedLevelId = appendType(type, savedLevel);
     auto savedSession = savedLevel + "-session";
     auto savedSessionId = appendType(type, savedSession);

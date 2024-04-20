@@ -26,7 +26,7 @@ void recoverTime(std::string level) {
     Mod::get()->setSavedValue("isNormal", false);
     std::string empty = "";
     Mod::get()->setSavedValue("FirstAtt", empty);
-    Mod::get()->setSavedValue("SavedLevel", empty);
+    Mod::get()->setSavedValue("CurrentLevel", empty);
 }
 
 class $modify(MenuLayer) {
@@ -35,7 +35,7 @@ class $modify(MenuLayer) {
             return false;
         }
 
-        auto saved_level = Mod::get()->getSavedValue<std::string>("SavedLevel");
+        auto saved_level = Mod::get()->getSavedValue<std::string>("CurrentLevel");
         // log::debug("MenuLayer_init SavedLevel: {}", saved_level);
         if (saved_level != "") {
             recoverTime(saved_level);
