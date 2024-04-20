@@ -1,6 +1,5 @@
 #include <Geode/modify/MenuLayer.hpp>
 #include "../TimeCounter.hpp"
-#include "utils/TimeUtils.hpp"
 
 using namespace geode::prelude;
 
@@ -11,18 +10,22 @@ void recoverTime(std::string level) {
         TimeCounter::recoverLostTime(CounterType::NoPause);
         // log::debug("MenuLayer_init_nopauserecovered");
     }
-    if (Mod::get()->getSavedValue<bool>("SavedStartpos")) {
-        TimeCounter::recoverLostTime(CounterType::Startpos);
-        // log::debug("MenuLayer_init_startposrecovered");
-    }
     if (Mod::get()->getSavedValue<bool>("SavedPractice")) {
         TimeCounter::recoverLostTime(CounterType::Practice);
         // log::debug("MenuLayer_init_practicerecovered");
-    } else if (!Mod::get()->getSavedValue<bool>("SavedStartpos")) {
+    }
+    if (Mod::get()->getSavedValue<bool>("isStartpos")) {
+        TimeCounter::recoverLostTime(CounterType::Startpos);
+        // log::debug("MenuLayer_init_startposrecovered");
+    }
+    if (Mod::get()->getSavedValue<bool>("isNormal")) {
         TimeCounter::recoverLostTime(CounterType::Normal);
         // log::debug("MenuLayer_init_normalrecovered");
     }
+    Mod::get()->setSavedValue("isStartpos", false);
+    Mod::get()->setSavedValue("isNormal", false);
     std::string empty = "";
+    Mod::get()->setSavedValue("FirstAtt", empty);
     Mod::get()->setSavedValue("SavedLevel", empty);
 }
 

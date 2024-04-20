@@ -53,8 +53,8 @@ class $modify(PauseLayer) {
         if (startpos) {TimeCounter::updateTotalTime(CounterType::Startpos);}
         if (!practice && !startpos) {TimeCounter::updateTotalTime(CounterType::Normal);}
         TimeCounter::updateTotalTime(CounterType::Total);
-        Mod::get()->setSavedValue(TimeCounter::levelId + "isStartpos", false);
-        Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", false);
+        Mod::get()->setSavedValue("isStartpos", false);
+        Mod::get()->setSavedValue("isNormal", false);
         std::string empty = "";
         Mod::get()->setSavedValue("FirstAtt", empty);
         Mod::get()->setSavedValue("SavedLevel", empty);

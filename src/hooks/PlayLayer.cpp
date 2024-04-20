@@ -8,7 +8,7 @@ std::string formatTime(long long time) {
     auto time_h = time / 3600;
     auto time_min = (time - time_h*3600) / 60;
     auto time_sec = (time - time_h*3600 - time_min*60);
-    return std::format("{:03}:{:02}:{:02}", time_h, time_min, time_sec);
+    return std::format("{:02}:{:02}:{:02}", time_h, time_min, time_sec);
 }
 
 class $modify(PlayLayer) {
@@ -24,14 +24,14 @@ class $modify(PlayLayer) {
         std::string mode = Mod::get()->getSavedValue<std::string>("FirstAtt");
         if (mode == "startpos") {
             TimeCounter::setStartTime(CounterType::Startpos);
-            Mod::get()->setSavedValue(TimeCounter::levelId + "isStartpos", true);
-            Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", false);
+            Mod::get()->setSavedValue("isStartpos", true);
+            Mod::get()->setSavedValue("isNormal", false);
             // log::debug("PlayLayer_init_startposstart_isStartpostrue_isNormalfalse");
         }
         if (mode == "normal") {
             TimeCounter::setStartTime(CounterType::Normal);
-            Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", true);
-            Mod::get()->setSavedValue(TimeCounter::levelId + "isStartpos", false);
+            Mod::get()->setSavedValue("isNormal", true);
+            Mod::get()->setSavedValue("isStartpos", false);
             // log::debug("PlayLayer_init_normalstart_isNormaltrue_isStartposfalse");
         }
         if (mode == "practice") {
@@ -61,40 +61,39 @@ class $modify(PlayLayer) {
 
         Mod::get()->setSavedValue("SavedTime", getCurrentTimeSeconds());
         Mod::get()->setSavedValue("SavedOnPause", false);
-        Mod::get()->setSavedValue("SavedStartpos", startpos);
         Mod::get()->setSavedValue("SavedPractice", practice);
         // log::debug("PlayLayer_resetLevel currentTime: {}", getCurrentTimeSeconds());
         // log::debug("PlayLayer_resetLevel recovery values saved");
 
         if (TimeCounter::levelId != "") {
-            bool prevstartpos = Mod::get()->getSavedValue<bool>(TimeCounter::levelId + "isStartpos");
-            bool prevnormal = Mod::get()->getSavedValue<bool>(TimeCounter::levelId + "isNormal");
+            bool prevstartpos = Mod::get()->getSavedValue<bool>("isStartpos");
+            bool prevnormal = Mod::get()->getSavedValue<bool>("isNormal");
             // log::debug("PlayLayer_resetLevel startpos:{}, practice:{}, prevstartpos:{}, prevnormal:{}, id:{}", startpos, practice, prevstartpos, prevnormal, TimeCounter::levelId);
             if (startpos) {
                 if (!prevstartpos) {
                     TimeCounter::setStartTime(CounterType::Startpos);
-                    Mod::get()->setSavedValue(TimeCounter::levelId + "isStartpos", true);
+                    Mod::get()->setSavedValue("isStartpos", true);
                     // log::debug("PlayLayer_resetLevel_startposstart_isStartpostrue");
                 }
             }
             else {
                 if (prevstartpos) {
                     TimeCounter::updateTotalTime(CounterType::Startpos);
-                    Mod::get()->setSavedValue(TimeCounter::levelId + "isStartpos", false);
+                    Mod::get()->setSavedValue("isStartpos", false);
                     // log::debug("PlayLayer_resetLevel_startposstop_isStartposfalse");
                 }
             }
             if (!startpos && !practice) {
                 if (!prevnormal) {
                     TimeCounter::setStartTime(CounterType::Normal);
-                    Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", true);
+                    Mod::get()->setSavedValue("isNormal", true);
                     // log::debug("PlayLayer_resetLevel_normalstart_isNormaltrue");
                 }
             }
             else {
                 if (prevnormal) {
                     TimeCounter::updateTotalTime(CounterType::Normal);
-                    Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", false);
+                    Mod::get()->setSavedValue("isNormal", false);
                     // log::debug("PlayLayer_resetLevel_normalstop_isNormalfalse");
                 }
             }
@@ -124,9 +123,9 @@ class $modify(PlayLayer) {
         if (p0) {
             TimeCounter::setStartTime(CounterType::Practice);
             // log::debug("PlayLayer_togglePracticeMode_practicestart");
-            if (Mod::get()->getSavedValue<bool>(TimeCounter::levelId + "isNormal")) {
+            if (Mod::get()->getSavedValue<bool>("isNormal")) {
                 TimeCounter::updateTotalTime(CounterType::Normal);
-                Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", false);
+                Mod::get()->setSavedValue("isNormal", false);
                 // log::debug("PlayLayer_togglePracticeMode_normalstop_isNormalfalse");
             }
         }
@@ -150,8 +149,8 @@ class $modify(PlayLayer) {
         if (startpos) {TimeCounter::updateTotalTime(CounterType::Startpos);}
         if (!practice && !startpos) {TimeCounter::updateTotalTime(CounterType::Normal);}
         TimeCounter::updateTotalTime(CounterType::Total);
-        Mod::get()->setSavedValue(TimeCounter::levelId + "isStartpos", false);
-        Mod::get()->setSavedValue(TimeCounter::levelId + "isNormal", false);
+        Mod::get()->setSavedValue("isStartpos", false);
+        Mod::get()->setSavedValue("isNormal", false);
         std::string empty = "";
         Mod::get()->setSavedValue("FirstAtt", empty);
         Mod::get()->setSavedValue("SavedLevel", empty);
