@@ -22,11 +22,11 @@ void recoverTime(std::string level) {
         TimeCounter::recoverLostTime(CounterType::Normal);
         // log::debug("MenuLayer_init_normalrecovered");
     }
+    std::string empty = "";
+    Mod::get()->setSavedValue("CurrentLevel", empty);
+    Mod::get()->setSavedValue("FirstAtt", empty);
     Mod::get()->setSavedValue("isStartpos", false);
     Mod::get()->setSavedValue("isNormal", false);
-    std::string empty = "";
-    Mod::get()->setSavedValue("FirstAtt", empty);
-    Mod::get()->setSavedValue("CurrentLevel", empty);
 }
 
 class $modify(MenuLayer) {

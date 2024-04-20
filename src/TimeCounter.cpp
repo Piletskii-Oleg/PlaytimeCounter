@@ -30,15 +30,17 @@ void TimeCounter::setStartTime(CounterType type) {
 }
 
 void TimeCounter::updateTotalTime(CounterType type) {
-    long long currentTime = getCurrentTimeSeconds();
-    long long startTime = TimeCounter::getStartTime(type);
-    long long delta = currentTime - startTime;
+    if (Mod::get()->getSavedValue<std::string>("CurrentLevel") != "") {
+        long long currentTime = getCurrentTimeSeconds();
+        long long startTime = TimeCounter::getStartTime(type);
+        long long delta = currentTime - startTime;
 
-    long long oldTime = TimeCounter::getTotalTime(type);
-    long long newTime = oldTime + delta;
+        long long oldTime = TimeCounter::getTotalTime(type);
+        long long newTime = oldTime + delta;
 
-    auto id = appendType(type, TimeCounter::levelId);
-    Mod::get()->setSavedValue(id, newTime);
+        auto id = appendType(type, TimeCounter::levelId);
+        Mod::get()->setSavedValue(id, newTime);
+    }
 }
 
 long long TimeCounter::getStartTime(CounterType type) {

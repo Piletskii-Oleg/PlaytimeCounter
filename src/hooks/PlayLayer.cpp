@@ -142,14 +142,12 @@ class $modify(PlayLayer) {
 
     void onQuit() {
         PlayLayer::onQuit();
-        if (Mod::get()->getSavedValue<std::string>("CurrentLevel") != "") {
-            TimeCounter::updateTotalTime(CounterType::Total);
-            bool practice = PlayLayer::get()->m_isPracticeMode;
-            bool startpos = PlayLayer::get()->m_isTestMode;
-            if (practice) {TimeCounter::updateTotalTime(CounterType::Practice);}
-            if (startpos) {TimeCounter::updateTotalTime(CounterType::Startpos);}
-            if (!practice && !startpos) {TimeCounter::updateTotalTime(CounterType::Normal);}
-        }
+        TimeCounter::updateTotalTime(CounterType::Total);
+        bool practice = PlayLayer::get()->m_isPracticeMode;
+        bool startpos = PlayLayer::get()->m_isTestMode;
+        if (practice) {TimeCounter::updateTotalTime(CounterType::Practice);}
+        if (startpos) {TimeCounter::updateTotalTime(CounterType::Startpos);}
+        if (!practice && !startpos) {TimeCounter::updateTotalTime(CounterType::Normal);}
         std::string empty = "";
         Mod::get()->setSavedValue("CurrentLevel", empty);
         Mod::get()->setSavedValue("FirstAtt", empty);
