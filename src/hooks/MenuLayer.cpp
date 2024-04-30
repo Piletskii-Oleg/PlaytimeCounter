@@ -25,8 +25,11 @@ void recoverTime(std::string level) {
     std::string empty = "";
     Mod::get()->setSavedValue("CurrentLevel", empty);
     Mod::get()->setSavedValue("FirstAtt", empty);
+    Mod::get()->setSavedValue("isTotal", false);
+    Mod::get()->setSavedValue("isComplete", false);
     Mod::get()->setSavedValue("isStartpos", false);
     Mod::get()->setSavedValue("isNormal", false);
+    // log::debug("MenuLayer_recoverTime_withpauseallstop_isTotalisCompleteisStartposisNormalfalse_FirstAttnone");
 }
 
 class $modify(MenuLayer) {

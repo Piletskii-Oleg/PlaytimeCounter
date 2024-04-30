@@ -22,6 +22,11 @@ class $modify(PlayLayer) {
         // log::debug("PlayLayer_init_updatedays");
 
         std::string mode = Mod::get()->getSavedValue<std::string>("FirstAtt");
+        if (mode != "") {
+            TimeCounter::setStartTime(CounterType::Total);
+            Mod::get()->setSavedValue("isTotal", true);
+            // log::debug("PlayLayer_init_totalstart_isTotaltrue");
+        }
         if (mode == "startpos") {
             TimeCounter::setStartTime(CounterType::Startpos);
             Mod::get()->setSavedValue("isStartpos", true);
@@ -39,15 +44,15 @@ class $modify(PlayLayer) {
         } 
         // log::debug("PlayLayer_init FirstAtt mode:{}", mode);
 
+
         return true;
     }
 
     void startGame() {
         PlayLayer::startGame();
-        TimeCounter::setStartTime(CounterType::Total);
         TimeCounter::setStartTime(CounterType::NoPause);
         Mod::get()->setSavedValue("CurrentLevel", TimeCounter::levelId);
-        // log::debug("PlayLayer_startGame_totalstart_nopausestart");
+        // log::debug("PlayLayer_startGame_nopausestart_setcurrentlevel");
     }
 
     void resetLevel() {
@@ -68,6 +73,16 @@ class $modify(PlayLayer) {
             bool prevstartpos = Mod::get()->getSavedValue<bool>("isStartpos");
             bool prevnormal = Mod::get()->getSavedValue<bool>("isNormal");
             // log::debug("PlayLayer_resetLevel startpos:{}, practice:{}, prevstartpos:{}, prevnormal:{}, id:{}", startpos, practice, prevstartpos, prevnormal, TimeCounter::levelId);
+            if (!Mod::get()->getSavedValue<bool>("isTotal")) {
+                TimeCounter::setStartTime(CounterType::Total);
+                Mod::get()->setSavedValue("isTotal", true);
+                // log::debug("PlayLayer_resetLevel_totalstart_isTotaltrue");  
+            }
+            if (Mod::get()->getSavedValue<bool>("isComplete")) {
+                TimeCounter::setStartTime(CounterType::NoPause);
+                Mod::get()->setSavedValue("isComplete", false);
+                // log::debug("PlayLayer_resetLevel_nopausestart_isCompletefalse");  
+            }
             if (startpos) {
                 if (!prevstartpos) {
                     TimeCounter::setStartTime(CounterType::Startpos);
@@ -111,6 +126,7 @@ class $modify(PlayLayer) {
         PlayLayer::levelComplete();
         TimeCounter::updateTotalTime(CounterType::NoPause);
 
+        Mod::get()->setSavedValue("isComplete", true);
         Mod::get()->setSavedValue("SavedTime", getCurrentTimeSeconds());
         Mod::get()->setSavedValue("SavedOnPause", true);
         Mod::get()->setSavedValue("SavedPractice", PlayLayer::get()->m_isPracticeMode);
@@ -134,12 +150,6 @@ class $modify(PlayLayer) {
         }
     }
 
-    void fullReset() {
-        PlayLayer::fullReset();
-        TimeCounter::setStartTime(CounterType::NoPause);
-        // log::debug("PlayLayer_fullReset_nopausestart");
-    }
-
     void onQuit() {
         PlayLayer::onQuit();
         TimeCounter::updateTotalTime(CounterType::Total);
@@ -148,12 +158,15 @@ class $modify(PlayLayer) {
         if (practice) {TimeCounter::updateTotalTime(CounterType::Practice);}
         if (startpos) {TimeCounter::updateTotalTime(CounterType::Startpos);}
         if (!practice && !startpos) {TimeCounter::updateTotalTime(CounterType::Normal);}
+        TimeCounter::updateDays();
         std::string empty = "";
         Mod::get()->setSavedValue("CurrentLevel", empty);
         Mod::get()->setSavedValue("FirstAtt", empty);
+        Mod::get()->setSavedValue("isTotal", false);
+        Mod::get()->setSavedValue("isComplete", false);
         Mod::get()->setSavedValue("isStartpos", false);
         Mod::get()->setSavedValue("isNormal", false);
-        // log::debug("PlayLayer_onQuit_withpauseallstop_isStartposisNormalfalse_FirstAttnone");
+        // log::debug("PlayLayer_onQuit_withpauseallstop_isTotalisCompleteisStartposisNormalfalse_FirstAttnone");
         // log::debug("PlayLayer_onQuit practice:{}, startpos:{}", practice, startpos);
         // log::info("{} attemptTime: {}", this->m_level->m_levelName, this->m_level->m_attemptTime.value());
         // log::info("{} workingTime: {}", this->m_level->m_levelName, this->m_level->m_workingTime);

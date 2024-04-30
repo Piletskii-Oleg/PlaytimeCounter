@@ -8,6 +8,7 @@ class $modify(PauseLayer) {
     void customSetup() {  
         PauseLayer::customSetup();
         TimeCounter::updateTotalTime(CounterType::NoPause);
+        TimeCounter::updateDays();
         Mod::get()->setSavedValue("SavedTime", getCurrentTimeSeconds());
         Mod::get()->setSavedValue("SavedOnPause", true);
         Mod::get()->setSavedValue("SavedPractice", PlayLayer::get()->m_isPracticeMode);
@@ -52,12 +53,15 @@ class $modify(PauseLayer) {
         if (practice) {TimeCounter::updateTotalTime(CounterType::Practice);}
         if (startpos) {TimeCounter::updateTotalTime(CounterType::Startpos);}
         if (!practice && !startpos) {TimeCounter::updateTotalTime(CounterType::Normal);}
+        TimeCounter::updateDays();
         std::string empty = "";
         Mod::get()->setSavedValue("CurrentLevel", empty);
         Mod::get()->setSavedValue("FirstAtt", empty);
+        Mod::get()->setSavedValue("isTotal", false);
+        Mod::get()->setSavedValue("isComplete", false);
         Mod::get()->setSavedValue("isStartpos", false);
         Mod::get()->setSavedValue("isNormal", false);
-        // log::debug("PauseLayer_onEdit_withpauseallstop_isStartposisNormalfalse_FirstAttnone");
+        // log::debug("PauseLayer_onEdit_withpauseallstop_isTotalisCompleteisStartposisNormalfalse_FirstAttnone");
         // log::debug("PauseLayer_onEdit practice: {}, startpos: {}", practice, startpos);
     }
 };

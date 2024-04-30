@@ -45,9 +45,6 @@ void TimeCounter::updateTotalTime(CounterType type) {
 
 long long TimeCounter::getStartTime(CounterType type) {
     auto id = appendType(type, TimeCounter::sessionId);
-    if (type == CounterType::Total) {
-        return Mod::get()->getSavedValue<long long>(id) - 1;
-    }
     return Mod::get()->getSavedValue<long long>(id);
 }
 
@@ -64,7 +61,6 @@ void TimeCounter::recoverLostTime(CounterType type) {
 
     long long savedTime = Mod::get()->getSavedValue<long long>("SavedTime");
     long long startTime = Mod::get()->getSavedValue<long long>(savedSessionId);
-    if (type == CounterType::Total) {startTime = startTime - 1;}
     long long delta = savedTime - startTime;
 
     long long oldTime = Mod::get()->getSavedValue<long long>(savedLevelId);
@@ -99,20 +95,15 @@ std::string TimeCounter::appendType(CounterType type, const std::string& id) {
 
 void TimeCounter::updateDays() {
     auto today = getCurrentDate();
-    int days = Mod::get()->getSavedValue<int>(TimeCounter::levelId + "DaysCounter");
-    if (days > 0) {
-        if (Mod::get()->getSavedValue<std::string>(TimeCounter::levelId + "LastDay") != today) {
-            Mod::get()->setSavedValue(TimeCounter::levelId + "DaysCounter", days + 1);
+    if (TimeCounter::getLastDay() != today) {
+            Mod::get()->setSavedValue(TimeCounter::levelId + "DaysCounter", TimeCounter::getTotalDays() + 1);
             Mod::get()->setSavedValue(TimeCounter::levelId + "LastDay", today);
         }
-    } else {
-        Mod::get()->setSavedValue(TimeCounter::levelId + "DaysCounter", 1);
-        Mod::get()->setSavedValue(TimeCounter::levelId + "LastDay", today);
-    }
 }
 
 int TimeCounter::getTotalDays() {
-    return Mod::get()->getSavedValue<int>(TimeCounter::levelId + "DaysCounter");
+    int days = Mod::get()->getSavedValue<int>(TimeCounter::levelId + "DaysCounter");
+    if (days > 0) {return days;} else {return 0;}
 }
 
 std::string TimeCounter::getLastDay() {
