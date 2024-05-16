@@ -96,9 +96,11 @@ std::string TimeCounter::appendType(CounterType type, const std::string& id) {
 void TimeCounter::updateDays() {
     auto today = getCurrentDate();
     if (TimeCounter::getLastDay() != today) {
-            Mod::get()->setSavedValue(TimeCounter::levelId + "DaysCounter", TimeCounter::getTotalDays() + 1);
-            Mod::get()->setSavedValue(TimeCounter::levelId + "LastDay", today);
-        }
+        Mod::get()->setSavedValue(TimeCounter::levelId + "DaysCounter", TimeCounter::getTotalDays() + 1);
+        Mod::get()->setSavedValue(TimeCounter::levelId + "LastDay", today);
+        auto shorttoday = today.substr(2,2) + today.substr(5,2) + today.substr(8,2);
+        Mod::get()->setSavedValue(TimeCounter::levelId + "AllDays", Mod::get()->getSavedValue<std::string>(TimeCounter::levelId + "AllDays") + shorttoday + " ");
+    }
 }
 
 int TimeCounter::getTotalDays() {

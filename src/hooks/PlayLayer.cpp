@@ -83,6 +83,7 @@ class $modify(PlayLayer) {
                 Mod::get()->setSavedValue("isComplete", false);
                 // log::debug("PlayLayer_resetLevel_nopausestart_isCompletefalse");  
             }
+
             if (startpos) {
                 if (!prevstartpos) {
                     TimeCounter::setStartTime(CounterType::Startpos);
